@@ -1,0 +1,62 @@
+{
+  "trace_requests": 4000000,
+  "seed": 20261018,
+  "warmup_s": 2,
+  "duration_s": 10,
+  "repetitions": 3,
+  "scenarios": [
+    {
+      "name": "hits-throughput",
+      "purpose": "100,000 keys that fit in the cache, zero-cost solver, TTL 60 s: the steady-state hit path and lock contention from 1 to 16 workers.",
+      "keys": 100000,
+      "zipf": 1.0,
+      "capacity": 100000,
+      "ttl": "60s",
+      "solver_latency": "0s",
+      "workers": [
+        1,
+        4,
+        8,
+        16
+      ]
+    },
+    {
+      "name": "eviction-churn",
+      "purpose": "1,000,000 keys, Zipf 0.8, capacity 10,000, 100 us solver: miss-heavy traffic with constant LRU eviction; solver calls versus misses show how many concurrent misses on the same key were coalesced.",
+      "keys": 1000000,
+      "zipf": 0.8,
+      "capacity": 10000,
+      "ttl": "60s",
+      "solver_latency": "100us",
+      "workers": [
+        16
+      ]
+    },
+    {
+      "name": "cold-herd",
+      "purpose": "100 keys, uniform, 64 workers, 50 ms solver, no warm-up: a cold start where every worker asks for keys nobody has computed yet. With single-flight the solver runs exactly 100 times; without it, up to 64 times per key.",
+      "keys": 100,
+      "zipf": 0.0,
+      "capacity": 100,
+      "ttl": "60s",
+      "solver_latency": "50ms",
+      "workers": [
+        64
+      ],
+      "warmup": "0s",
+      "duration": "3s"
+    },
+    {
+      "name": "hot-cold-ttl",
+      "purpose": "1,000 keys, Zipf 1.0, 2 ms solver, TTL 1 s, 16 workers: both libraries renew the TTL on every hit (sliding expiration), so hot keys stay cached while keys requested less than once per second expire and are recomputed; measures a mix of sub-microsecond hits and 2 ms recomputations.",
+      "keys": 1000,
+      "zipf": 1.0,
+      "capacity": 1000,
+      "ttl": "1s",
+      "solver_latency": "2ms",
+      "workers": [
+        16
+      ]
+    }
+  ]
+}
