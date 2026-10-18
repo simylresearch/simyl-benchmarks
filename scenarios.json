@@ -7,7 +7,7 @@
   "scenarios": [
     {
       "name": "hits-throughput",
-      "purpose": "100,000 keys that fit in the cache, zero-cost solver, TTL 60 s: the steady-state hit path and lock contention from 1 to 16 workers.",
+      "purpose": "100,000 keys that fit in the cache, zero-cost solver, TTL 60 s, 4 s warm-up so the whole trace is seen before measuring: the steady-state hit path and lock contention from 1 to 16 workers.",
       "keys": 100000,
       "zipf": 1.0,
       "capacity": 100000,
@@ -18,16 +18,17 @@
         4,
         8,
         16
-      ]
+      ],
+      "warmup": "4s"
     },
     {
       "name": "eviction-churn",
-      "purpose": "1,000,000 keys, Zipf 0.8, capacity 10,000, 100 us solver: miss-heavy traffic with constant LRU eviction; solver calls versus misses show how many concurrent misses on the same key were coalesced.",
+      "purpose": "1,000,000 keys, Zipf 0.8, capacity 10,000, 1 ms solver, 16 workers: miss-heavy traffic with constant LRU eviction; solver calls versus misses show how many concurrent misses on the same key were coalesced. The solver sleeps 1 ms rather than less because Go's time.Sleep rounds sub-millisecond sleeps up to about 1 ms on Linux; the measured mean solver time is reported for both implementations.",
       "keys": 1000000,
       "zipf": 0.8,
       "capacity": 10000,
       "ttl": "60s",
-      "solver_latency": "100us",
+      "solver_latency": "1ms",
       "workers": [
         16
       ]
@@ -48,10 +49,10 @@
     },
     {
       "name": "hot-cold-ttl",
-      "purpose": "1,000 keys, Zipf 1.0, 2 ms solver, TTL 1 s, 16 workers: both libraries renew the TTL on every hit (sliding expiration), so hot keys stay cached while keys requested less than once per second expire and are recomputed; measures a mix of sub-microsecond hits and 2 ms recomputations.",
-      "keys": 1000,
+      "purpose": "200,000 keys, Zipf 1.0, 2 ms solver, TTL 1 s, 16 workers: both libraries renew the TTL on every hit (sliding expiration), so popular keys stay cached while keys requested less than once per second expire and are recomputed; measures a self-balancing mix of sub-microsecond hits and 2 ms recomputations.",
+      "keys": 200000,
       "zipf": 1.0,
-      "capacity": 1000,
+      "capacity": 200000,
       "ttl": "1s",
       "solver_latency": "2ms",
       "workers": [

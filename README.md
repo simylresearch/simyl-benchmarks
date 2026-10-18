@@ -23,7 +23,11 @@ re-run, not as guaranteed performance.
    (`scripts/gen_trace.py`, Zipf distribution). Every implementation replays the same trace.
 2. `W` workers (goroutines / `std::thread`) start at different offsets of the trace and loop over
    it. Each request calls the cache's "get or compute" operation with the key as a string.
-3. The miss solver counts its calls and sleeps for the scenario's simulated backend latency.
+3. The miss solver counts its calls and sleeps for the scenario's simulated backend latency; the mean
+   time it really spent sleeping is reported as `solver_mean_us`. Simulated latencies are at least 1 ms
+   because Go's `time.Sleep` rounds shorter sleeps up to about 1 ms on Linux (C++ `sleep_for`
+   oversleeps 100 µs by roughly 50 µs); a sub-millisecond latency would compare the runtimes' timers,
+   not the caches.
 4. Per-request latency is recorded in a log-linear histogram (16 sub-buckets per power of two,
    ≈6 % resolution); hits and misses come from the library's own counters.
 5. Each run has a warm-up (not measured) and a measured period; each configuration is repeated
@@ -58,7 +62,8 @@ Wall time of the full protocol on the reference machine is recorded in each `RES
 - `throughput_rps`: requests completed per second by all workers.
 - `p50_us`, `p99_us`, `p999_us`, `max_us`: per-request latency percentiles in microseconds (bucket
   lower bounds, ≈6 % resolution).
-- `solver_calls`: how many times the backend was actually called during the measured period. In
+- `solver_calls`: how many times the backend was actually called during the measured period;
+  `solver_mean_us` is the mean time the simulated backend really took. In
   single-flight caches this should stay close to the number of distinct keys that needed computing,
   regardless of how many workers asked for them.
 - `hits` / `misses`: the library's own counters; their exact meaning differs slightly between

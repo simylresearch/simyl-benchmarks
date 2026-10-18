@@ -24,7 +24,7 @@ for (scenario, workers, impl), rs in sorted(groups.items()):
         "throughput_rps": med(rs, "throughput_rps"), "throughput_min": min(x["throughput_rps"] for x in rs),
         "throughput_max": max(x["throughput_rps"] for x in rs),
         "p50_us": med(rs, "p50_us"), "p99_us": med(rs, "p99_us"), "p999_us": med(rs, "p999_us"), "max_us": med(rs, "max_us"),
-        "solver_calls": med(rs, "solver_calls"), "hits": med(rs, "hits"), "misses": med(rs, "misses"),
+        "solver_calls": med(rs, "solver_calls"), "solver_mean_us": med(rs, "solver_mean_us"), "hits": med(rs, "hits"), "misses": med(rs, "misses"),
         "errors": sum(x["errors"] for x in rs), "rss_mb": med(rs, "rss_mb"), "duration_s": med(rs, "duration_s"),
         "version": rs[0]["version"], "runtime": rs[0]["runtime"],
     })
@@ -42,9 +42,9 @@ lines = [f"# Results — {run.name}", "",
          f"- Protocol: each cell is the median of {max(s['runs'] for s in summary)} runs of {fmt(summary[0]['duration_s'])} s after a warm-up; percentiles come from a log-linear histogram (≈6 % resolution); throughput shows min–max across runs." + (f" Total wall time {wall} s." if wall else ""),
          ""]
 for scenario in dict.fromkeys(s["scenario"] for s in summary):
-    lines += [f"## {scenario}", "", "| impl | workers | req/s (median) | min–max | p50 µs | p99 µs | p99.9 µs | max µs | solver calls | hits | misses | RSS MB |", "|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    lines += [f"## {scenario}", "", "| impl | workers | req/s (median) | min–max | p50 µs | p99 µs | p99.9 µs | max µs | solver calls | solver mean µs | hits | misses | RSS MB |", "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for s in [x for x in summary if x["scenario"] == scenario]:
-        lines.append(f"| {s['impl']} | {s['workers']} | {fmt(s['throughput_rps'])} | {fmt(s['throughput_min'])}–{fmt(s['throughput_max'])} | {fmt(s['p50_us'])} | {fmt(s['p99_us'])} | {fmt(s['p999_us'])} | {fmt(s['max_us'])} | {fmt(s['solver_calls'])} | {fmt(s['hits'])} | {fmt(s['misses'])} | {fmt(s['rss_mb'])} |")
+        lines.append(f"| {s['impl']} | {s['workers']} | {fmt(s['throughput_rps'])} | {fmt(s['throughput_min'])}–{fmt(s['throughput_max'])} | {fmt(s['p50_us'])} | {fmt(s['p99_us'])} | {fmt(s['p999_us'])} | {fmt(s['max_us'])} | {fmt(s['solver_calls'])} | {fmt(s['solver_mean_us'])} | {fmt(s['hits'])} | {fmt(s['misses'])} | {fmt(s['rss_mb'])} |")
     lines.append("")
 (run / "RESULTS.md").write_text("\n".join(lines))
 print("\n".join(lines))

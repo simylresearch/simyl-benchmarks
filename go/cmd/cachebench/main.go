@@ -150,6 +150,7 @@ type result struct {
 	P999Us        float64 `json:"p999_us"`
 	MaxUs         float64 `json:"max_us"`
 	SolverCalls   uint64  `json:"solver_calls"`
+	SolverMeanUs  float64 `json:"solver_mean_us"`
 	Hits          int     `json:"hits"`
 	Misses        int     `json:"misses"`
 	Errors        uint64  `json:"errors"`
@@ -183,12 +184,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	var solverCalls atomic.Uint64
+	var solverCalls, solverNs atomic.Uint64
 	lat := *solverLat
 	solver := func(k int, _ ...interface{}) (Value, *gw.RequestError) {
 		solverCalls.Add(1)
 		if lat > 0 {
+			t0 := time.Now()
 			time.Sleep(lat)
+			solverNs.Add(uint64(time.Since(t0).Nanoseconds()))
 		}
 		v := Value{ID: k}
 		copy(v.Payload[:], strconv.Itoa(k))
@@ -207,7 +210,7 @@ func main() {
 	)
 	n := len(trace)
 	immediate := *warmup <= 0 // cold-start scenarios: measure from the first request
-	hits0, misses0, calls0 := cache.HitCount(), cache.MissCount(), solverCalls.Load()
+	hits0, misses0, calls0, ns0 := cache.HitCount(), cache.MissCount(), solverCalls.Load(), solverNs.Load()
 	startedAt := time.Now()
 	if immediate {
 		measuring.Store(true)
@@ -239,7 +242,7 @@ func main() {
 	}
 	if !immediate {
 		time.Sleep(*warmup)
-		hits0, misses0, calls0 = cache.HitCount(), cache.MissCount(), solverCalls.Load()
+		hits0, misses0, calls0, ns0 = cache.HitCount(), cache.MissCount(), solverCalls.Load(), solverNs.Load()
 		startedAt = time.Now()
 		measuring.Store(true)
 	}
@@ -248,7 +251,11 @@ func main() {
 	elapsed := time.Since(startedAt)
 	stop.Store(true)
 	wg.Wait()
-	hits1, misses1, calls1 := cache.HitCount(), cache.MissCount(), solverCalls.Load()
+	hits1, misses1, calls1, ns1 := cache.HitCount(), cache.MissCount(), solverCalls.Load(), solverNs.Load()
+	solverMeanUs := 0.0
+	if calls1 > calls0 {
+		solverMeanUs = float64(ns1-ns0) / 1e3 / float64(calls1-calls0)
+	}
 
 	var total hist
 	for w := range hists {
@@ -264,7 +271,7 @@ func main() {
 		MeanUs: us(total.sum) / float64(max(total.count, 1)),
 		P50Us:  us(total.percentile(0.50)), P90Us: us(total.percentile(0.90)),
 		P99Us: us(total.percentile(0.99)), P999Us: us(total.percentile(0.999)), MaxUs: us(total.max),
-		SolverCalls: calls1 - calls0, Hits: hits1 - hits0, Misses: misses1 - misses0, Errors: errors.Load(),
+		SolverCalls: calls1 - calls0, SolverMeanUs: solverMeanUs, Hits: hits1 - hits0, Misses: misses1 - misses0, Errors: errors.Load(),
 		RSSMB: rssMB(), Runtime: runtime.Version(), MaxProcs: runtime.GOMAXPROCS(0),
 		StartedAt: startedAt.UTC().Format(time.RFC3339),
 	}

@@ -1,0 +1,46 @@
+{
+  "captured_at": "2026-10-18T22:18:22Z",
+  "cpu": {
+    "model": "AMD Ryzen 7 PRO 7840U w/ Radeon 780M Graphics",
+    "sockets": "1",
+    "cores_per_socket": "8",
+    "threads_per_core": "2",
+    "cpus": "16",
+    "max_mhz": "5132,0000",
+    "min_mhz": "400,0000",
+    "l2": "8 MiB (8 instances)",
+    "l3": "16 MiB (1 instance)",
+    "flags_have_avx2": true
+  },
+  "memory": {
+    "total": "61348416 kB",
+    "available_at_capture": "33964164 kB"
+  },
+  "os": {
+    "name": "Ubuntu 24.04.5 LTS",
+    "kernel": "6.8.0-146-generic",
+    "arch": "x86_64"
+  },
+  "power": {
+    "scaling_driver": "amd-pstate-epp",
+    "governor": "powersave",
+    "energy_performance_preference": "balance_performance",
+    "platform_profile": "balanced",
+    "boost": null,
+    "ac_online": "1",
+    "chassis": "10"
+  },
+  "toolchain": {
+    "go": "go version go1.24.4 linux/amd64",
+    "cxx": "c++ (GCC) 13.2.0",
+    "cmake": "cmake version 3.28.3",
+    "python": "Python 3.12.0"
+  },
+  "sources": {
+    "gateway_cache": "github.com/geniussportsgroup/gateway_cache/v3 v3.1.0",
+    "ALEPH_COMMIT": "d37658bf9ad0a64f19717687bee16b4b7c618472",
+    "CPPCACHE_COMMIT": "5bfaf38d328a799ba94f8ce64f61155df18d06ee",
+    "simyl_benchmarks_commit": "ab6988f"
+  },
+  "load_at_capture": "4.88 5.30 9.41 1/5372 977484"
+}

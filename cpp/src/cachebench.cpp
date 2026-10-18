@@ -139,14 +139,19 @@ int main(int argc, char **argv)
     }
 
   auto trace = load_trace(trace_path);
-  std::atomic<uint64_t> solver_calls{0};
+  std::atomic<uint64_t> solver_calls{0}, solver_ns{0};
   const microseconds solver_latency(solver_us);
   using CacheT = CppCache::Cache<std::string, Value>;
   CacheT cache(size_t(capacity), seconds(ttl_us / 1'000'000), seconds(ttl_us / 1'000'000),
                [&](const std::string &k) -> std::shared_ptr<Value>
                {
                  solver_calls.fetch_add(1, std::memory_order_relaxed);
-                 if (solver_latency.count() > 0) std::this_thread::sleep_for(solver_latency);
+                 if (solver_latency.count() > 0)
+                   {
+                     auto t0 = steady_clock::now();
+                     std::this_thread::sleep_for(solver_latency);
+                     solver_ns.fetch_add(uint64_t(duration_cast<nanoseconds>(steady_clock::now() - t0).count()), std::memory_order_relaxed);
+                   }
                  auto v = std::make_shared<Value>();
                  v->id = std::stoi(k);
                  std::strncpy(v->payload, k.c_str(), sizeof(v->payload) - 1);
@@ -159,7 +164,7 @@ int main(int argc, char **argv)
   std::vector<std::thread> threads;
   const size_t n = trace.size();
   const bool immediate = warmup_us <= 0;  // cold-start scenarios: measure from the first request
-  auto s0 = cache.stats(); auto calls0 = solver_calls.load();
+  auto s0 = cache.stats(); auto calls0 = solver_calls.load(); auto ns0 = solver_ns.load();
   auto started = system_clock::now();
   auto t_start = steady_clock::now();
   if (immediate) measuring.store(true);
@@ -186,7 +191,7 @@ int main(int argc, char **argv)
   if (!immediate)
     {
       std::this_thread::sleep_for(microseconds(warmup_us));
-      s0 = cache.stats(); calls0 = solver_calls.load();
+      s0 = cache.stats(); calls0 = solver_calls.load(); ns0 = solver_ns.load();
       started = system_clock::now();
       t_start = steady_clock::now();
       measuring.store(true);
@@ -196,7 +201,8 @@ int main(int argc, char **argv)
   double elapsed = duration<double>(steady_clock::now() - t_start).count();
   stop.store(true);
   for (auto &t : threads) t.join();
-  auto s1 = cache.stats(); auto calls1 = solver_calls.load();
+  auto s1 = cache.stats(); auto calls1 = solver_calls.load(); auto ns1 = solver_ns.load();
+  const double solver_mean_us = calls1 > calls0 ? double(ns1 - ns0) / 1e3 / double(calls1 - calls0) : 0.0;
 
   Hist total;
   for (auto &h : hists) total.merge(h);
@@ -208,13 +214,13 @@ int main(int argc, char **argv)
     "{\"impl\":\"cpp-cache\",\"version\":\"%s\",\"scenario\":\"%s\",\"keys\":%d,\"workers\":%d,\"capacity\":%d,"
     "\"ttl_ms\":%.3f,\"solver_latency_us\":%.3f,\"warmup_s\":%.3f,\"duration_s\":%.6f,\"requests\":%llu,"
     "\"throughput_rps\":%.3f,\"mean_us\":%.3f,\"p50_us\":%.3f,\"p90_us\":%.3f,\"p99_us\":%.3f,\"p999_us\":%.3f,"
-    "\"max_us\":%.3f,\"solver_calls\":%llu,\"hits\":%llu,\"misses\":%llu,\"errors\":%llu,\"rss_mb\":%.3f,"
+    "\"max_us\":%.3f,\"solver_calls\":%llu,\"solver_mean_us\":%.3f,\"hits\":%llu,\"misses\":%llu,\"errors\":%llu,\"rss_mb\":%.3f,"
     "\"runtime\":\"%s\",\"max_procs\":%u,\"started_at\":\"%s\"}",
     CACHEBENCH_VERSION, scenario.c_str(), keys, workers, capacity,
     double(ttl_us) / 1e3, double(solver_us), double(warmup_us) / 1e6, elapsed, (unsigned long long) total.count,
     double(total.count) / elapsed, us(total.sum) / double(std::max<uint64_t>(total.count, 1)),
     us(total.percentile(0.50)), us(total.percentile(0.90)), us(total.percentile(0.99)), us(total.percentile(0.999)),
-    us(total.max), (unsigned long long) (calls1 - calls0), (unsigned long long) (s1.hits - s0.hits),
+    us(total.max), (unsigned long long) (calls1 - calls0), solver_mean_us, (unsigned long long) (s1.hits - s0.hits),
     (unsigned long long) (s1.misses - s0.misses), (unsigned long long) errors.load(), rss_mb(),
     __VERSION__, std::thread::hardware_concurrency(), stamp);
   if (out.empty()) { std::puts(line); return 0; }

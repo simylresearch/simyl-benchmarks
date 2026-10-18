@@ -16,6 +16,9 @@ set(CPPCACHE_COMMIT "5bfaf38d328a799ba94f8ce64f61155df18d06ee")
 set(CPPCACHE_SHA256 "fba93c3be749dbf67dcb67c06c0106ec187e6445cc32d1abdda57584b71bb310")
 
 include(FetchContent)
+if(POLICY CMP0135)
+  cmake_policy(SET CMP0135 NEW)  # timestamps of extracted archives follow the download
+endif()
 set(BUILD_TESTS OFF CACHE BOOL "Aleph-w tests" FORCE)
 set(BUILD_EXAMPLES OFF CACHE BOOL "Aleph-w examples" FORCE)
 set(BUILD_OPTIMIZED ON CACHE BOOL "Aleph-w optimized build" FORCE)
