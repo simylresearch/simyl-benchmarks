@@ -34,12 +34,17 @@ def fmt(v):
     return f"{v:,.0f}" if v >= 100 else f"{v:,.1f}"
 
 cpu, power = env["cpu"], env["power"]
+by_dur = {}
+for s_ in summary:
+    by_dur.setdefault(round(s_["duration_s"]), set()).add(s_["scenario"])
+main_dur = max(by_dur, key=lambda k: len(by_dur[k]))
+durations = f"{main_dur} s" + "".join(f" ({', '.join(sorted(v))}: {k} s)" for k, v in sorted(by_dur.items()) if k != main_dur)
 lines = [f"# Results — {run.name}", "",
          f"- CPU: {cpu['model']} ({cpu['cores_per_socket']} cores, {cpu['cpus']} threads, L3 {cpu['l3']}); memory {env['memory']['total']}; {env['os']['name']}, kernel {env['os']['kernel']}.",
          f"- Power: driver {power['scaling_driver']}, governor {power['governor']}, EPP {power['energy_performance_preference']}, platform profile {power['platform_profile']}, boost {power['boost']}, AC {power['ac_online']}.",
          f"- Toolchain: {env['toolchain']['go']}; {env['toolchain']['cxx']}; {env['toolchain']['cmake']}.",
          f"- Sources: gateway_cache {env['sources']['gateway_cache']}; cpp-cache {env['sources'].get('CPPCACHE_COMMIT','?')[:7]}; Aleph-w {env['sources'].get('ALEPH_COMMIT','?')[:7]}; harness {env['sources']['simyl_benchmarks_commit']}.",
-         f"- Protocol: each cell is the median of {max(s['runs'] for s in summary)} runs of {fmt(summary[0]['duration_s'])} s after a warm-up; percentiles come from a log-linear histogram (≈6 % resolution); throughput shows min–max across runs." + (f" Total wall time {wall} s." if wall else ""),
+         f"- Protocol: each cell is the median of {max(s['runs'] for s in summary)} runs of {durations} after a warm-up; percentiles come from a log-linear histogram (≈6 % resolution); throughput shows min–max across runs." + (f" Total wall time {wall} s." if wall else ""),
          ""]
 for scenario in dict.fromkeys(s["scenario"] for s in summary):
     lines += [f"## {scenario}", "", "| impl | workers | req/s (median) | min–max | p50 µs | p99 µs | p99.9 µs | max µs | solver calls | solver mean µs | hits | misses | RSS MB |", "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]

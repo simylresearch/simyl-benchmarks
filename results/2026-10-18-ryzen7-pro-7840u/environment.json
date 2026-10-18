@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-10-18T22:18:22Z",
+  "captured_at": "2026-10-18T22:29:32Z",
   "cpu": {
     "model": "AMD Ryzen 7 PRO 7840U w/ Radeon 780M Graphics",
     "sockets": "1",
@@ -14,7 +14,7 @@
   },
   "memory": {
     "total": "61348416 kB",
-    "available_at_capture": "33964164 kB"
+    "available_at_capture": "33810428 kB"
   },
   "os": {
     "name": "Ubuntu 24.04.5 LTS",
@@ -40,7 +40,7 @@
     "gateway_cache": "github.com/geniussportsgroup/gateway_cache/v3 v3.1.0",
     "ALEPH_COMMIT": "d37658bf9ad0a64f19717687bee16b4b7c618472",
     "CPPCACHE_COMMIT": "5bfaf38d328a799ba94f8ce64f61155df18d06ee",
-    "simyl_benchmarks_commit": "ab6988f"
+    "simyl_benchmarks_commit": "2614b33"
   },
-  "load_at_capture": "4.88 5.30 9.41 1/5372 977484"
+  "load_at_capture": "2.51 4.02 6.84 1/5378 982862"
 }

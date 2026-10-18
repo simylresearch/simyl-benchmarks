@@ -3,39 +3,39 @@
 - CPU: AMD Ryzen 7 PRO 7840U w/ Radeon 780M Graphics (8 cores, 16 threads, L3 16 MiB (1 instance)); memory 61348416 kB; Ubuntu 24.04.5 LTS, kernel 6.8.0-146-generic.
 - Power: driver amd-pstate-epp, governor powersave, EPP balance_performance, platform profile balanced, boost None, AC 1.
 - Toolchain: go version go1.24.4 linux/amd64; c++ (GCC) 13.2.0; cmake version 3.28.3.
-- Sources: gateway_cache github.com/geniussportsgroup/gateway_cache/v3 v3.1.0; cpp-cache 5bfaf38; Aleph-w d37658b; harness ab6988f.
-- Protocol: each cell is the median of 3 runs of 3.0 s after a warm-up; percentiles come from a log-linear histogram (≈6 % resolution); throughput shows min–max across runs. Total wall time 452 s.
+- Sources: gateway_cache github.com/geniussportsgroup/gateway_cache/v3 v3.1.0; cpp-cache 5bfaf38; Aleph-w d37658b; harness 2614b33.
+- Protocol: each cell is the median of 3 runs of 10 s (cold-herd: 3 s) after a warm-up; percentiles come from a log-linear histogram (≈6 % resolution); throughput shows min–max across runs. Total wall time 501 s.
 
 ## cold-herd
 
-| impl | workers | req/s (median) | min–max | p50 µs | p99 µs | p99.9 µs | max µs | solver calls | hits | misses | RSS MB |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cpp-cache | 64 | 2,714,211 | 2,620,305–2,718,391 | 3.3 | 213 | 852 | 50,446 | 100 | 8,147,852 | 100 | 21.5 |
-| gateway_cache | 64 | 2,312,450 | 2,310,634–2,329,708 | 0.3 | 459 | 885 | 51,016 | 100 | 6,937,657 | 100 | 56.7 |
+| impl | workers | req/s (median) | min–max | p50 µs | p99 µs | p99.9 µs | max µs | solver calls | solver mean µs | hits | misses | RSS MB |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cpp-cache | 64 | 3,011,286 | 2,888,972–3,043,999 | 2.9 | 188 | 655 | 50,861 | 100 | 50,060 | 9,040,958 | 100 | 21.5 |
+| gateway_cache | 64 | 2,548,668 | 2,538,227–2,597,707 | 0.3 | 410 | 819 | 50,896 | 100 | 50,302 | 7,646,282 | 100 | 69.8 |
 
 ## eviction-churn
 
-| impl | workers | req/s (median) | min–max | p50 µs | p99 µs | p99.9 µs | max µs | solver calls | hits | misses | RSS MB |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cpp-cache | 16 | 134,057 | 133,192–134,106 | 147 | 172 | 213 | 3,807 | 1,030,871 | 309,710 | 1,030,887 | 24.0 |
-| gateway_cache | 16 | 19,975 | 19,834–19,994 | 1,049 | 1,180 | 1,966 | 4,487 | 153,684 | 46,082 | 153,684 | 52.7 |
+| impl | workers | req/s (median) | min–max | p50 µs | p99 µs | p99.9 µs | max µs | solver calls | solver mean µs | hits | misses | RSS MB |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cpp-cache | 16 | 19,616 | 19,616–19,623 | 1,049 | 1,049 | 1,114 | 4,808 | 150,875 | 1,058 | 45,300 | 150,891 | 24.0 |
+| gateway_cache | 16 | 18,811 | 18,706–18,838 | 1,049 | 1,180 | 2,032 | 4,300 | 144,582 | 1,101 | 43,537 | 144,582 | 52.3 |
 
 ## hits-throughput
 
-| impl | workers | req/s (median) | min–max | p50 µs | p99 µs | p99.9 µs | max µs | solver calls | hits | misses | RSS MB |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cpp-cache | 1 | 3,334,988 | 3,207,506–3,456,887 | 0.1 | 1.1 | 2.7 | 265 | 0.0 | 33,350,100 | 0.0 | 51.4 |
-| gateway_cache | 1 | 1,770,343 | 1,711,301–1,782,996 | 0.4 | 1.9 | 4.4 | 1,023 | 437 | 17,702,987 | 437 | 124 |
-| cpp-cache | 4 | 1,788,965 | 1,784,439–1,853,505 | 0.7 | 16.4 | 34.8 | 6,267 | 218 | 17,889,582 | 218 | 51.5 |
-| gateway_cache | 4 | 1,522,866 | 1,484,897–1,543,046 | 0.5 | 69.6 | 139 | 5,312 | 1,109 | 15,227,566 | 1,109 | 141 |
-| cpp-cache | 8 | 1,814,716 | 1,726,606–1,926,104 | 2.0 | 26.6 | 61.4 | 7,471 | 310 | 18,146,975 | 310 | 51.6 |
-| gateway_cache | 8 | 1,489,638 | 1,487,556–1,542,091 | 0.5 | 147 | 311 | 8,684 | 1,226 | 14,895,008 | 1,226 | 135 |
-| cpp-cache | 16 | 1,751,786 | 1,695,201–1,763,021 | 4.1 | 57.3 | 127 | 9,863 | 650 | 17,517,419 | 650 | 51.7 |
-| gateway_cache | 16 | 1,525,590 | 1,504,512–1,563,779 | 0.5 | 328 | 623 | 5,936 | 997 | 15,254,997 | 997 | 141 |
+| impl | workers | req/s (median) | min–max | p50 µs | p99 µs | p99.9 µs | max µs | solver calls | solver mean µs | hits | misses | RSS MB |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cpp-cache | 1 | 3,729,630 | 3,525,642–3,767,226 | 0.1 | 0.9 | 2.3 | 304 | 0.0 | 0.0 | 37,296,675 | 0.0 | 51.4 |
+| gateway_cache | 1 | 1,825,178 | 1,808,629–1,933,327 | 0.4 | 1.9 | 4.1 | 1,716 | 0.0 | 0.0 | 18,251,934 | 0.0 | 122 |
+| cpp-cache | 4 | 2,074,345 | 1,846,801–2,149,483 | 0.6 | 13.8 | 28.7 | 4,050 | 0.0 | 0.0 | 20,743,613 | 0.0 | 51.5 |
+| gateway_cache | 4 | 1,628,152 | 1,530,965–1,696,679 | 0.5 | 65.5 | 139 | 7,368 | 0.0 | 0.0 | 16,281,602 | 0.0 | 138 |
+| cpp-cache | 8 | 2,145,859 | 1,827,492–2,265,028 | 1.8 | 21.5 | 45.1 | 6,076 | 0.0 | 0.0 | 21,458,746 | 0.0 | 51.6 |
+| gateway_cache | 8 | 1,673,045 | 1,594,018–1,677,353 | 0.5 | 139 | 279 | 3,928 | 0.0 | 0.0 | 16,730,510 | 0.0 | 140 |
+| cpp-cache | 16 | 1,907,896 | 1,786,557–2,120,210 | 3.6 | 53.2 | 115 | 8,290 | 0.0 | 0.0 | 19,079,125 | 0.0 | 51.7 |
+| gateway_cache | 16 | 1,673,797 | 1,540,942–1,682,224 | 0.4 | 279 | 557 | 4,620 | 0.0 | 0.0 | 16,738,009 | 0.0 | 154 |
 
 ## hot-cold-ttl
 
-| impl | workers | req/s (median) | min–max | p50 µs | p99 µs | p99.9 µs | max µs | solver calls | hits | misses | RSS MB |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cpp-cache | 16 | 3,278,038 | 3,169,457–3,294,904 | 2.0 | 38.9 | 94.2 | 14,713 | 0.0 | 32,780,609 | 0.0 | 21.2 |
-| gateway_cache | 16 | 2,377,348 | 2,279,551–2,405,683 | 0.4 | 139 | 279 | 6,167 | 0.0 | 23,773,650 | 0.0 | 65.5 |
+| impl | workers | req/s (median) | min–max | p50 µs | p99 µs | p99.9 µs | max µs | solver calls | solver mean µs | hits | misses | RSS MB |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cpp-cache | 16 | 24,060 | 24,041–24,097 | 0.9 | 2,032 | 2,097 | 6,016 | 77,415 | 2,061 | 163,190 | 77,431 | 42.2 |
+| gateway_cache | 16 | 21,866 | 21,770–21,867 | 2.7 | 2,228 | 2,621 | 5,047 | 71,842 | 2,208 | 146,826 | 71,842 | 71.8 |
