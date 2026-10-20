@@ -4,7 +4,7 @@
 
 **Where and when.** October 19, 2026, on the machine declared in [How we measure](https://simylresearch.com/en/method/): AMD Ryzen 7 PRO 7840U, 58 GiB of RAM, Ubuntu 24.04, laptop on mains power with the `balanced` profile and the `powersave` governor. Exact versions, SHA-256 of the model and timestamps are in `raw/environment.txt`.
 
-**Result in one line.** With the repository parameters (`-DMEMLIM=4096`), all eleven searches (safety and the ten LTL properties) report `errors: 0` for the explored part, but every one of them stopped at the 4 GB memory bound before exhausting the state space; the repository script reports PASSED anyway because it only greps `errors: 0`. The second attempt (COLLAPSE compression, 40 GB, 90-minute cap per search) is reported in `summary.md`. These are results for the bounded model, not a proof of correctness of the C++ code.
+**Result in one line.** With the repository parameters (`-DMEMLIM=4096`), all eleven searches (safety and the ten LTL properties) report `errors: 0` for the explored part, but every one of them stopped at the 4 GB memory bound before exhausting the state space; the repository script reports PASSED anyway: it greps `errors: 0` for the LTL searches and prints PASSED for the safety search as soon as `pan` exits. Note that its safety search runs with the first LTL claim of the model active (no `-N`, no `-DNOCLAIM`). The second attempt (COLLAPSE compression, 40 GB, 90-minute cap per search) is reported in `summary.md`. These are results for the bounded model, not a proof of correctness of the C++ code.
 
 ## Files
 
@@ -44,6 +44,6 @@ Read the end of each `pan` output: `reached -DMEMLIM bound` means the search was
 
 **Dónde y cuándo.** 19 de octubre de 2026, en la máquina declarada en [Cómo medimos](https://simylresearch.com/es/metodo/): AMD Ryzen 7 PRO 7840U, 58 GiB de RAM, Ubuntu 24.04, portátil conectado a la corriente con perfil `balanced` y gobernador `powersave`. Versiones exactas, SHA-256 del modelo y marcas de tiempo en `raw/environment.txt`.
 
-**Resultado en una línea.** Con los parámetros del repositorio (`-DMEMLIM=4096`), las once búsquedas (seguridad y las diez propiedades LTL) informan `errors: 0` en la parte explorada, pero todas se detuvieron en el límite de 4 GB antes de agotar el espacio de estados; el script del repositorio las declara PASSED porque solo busca `errors: 0`. El segundo intento (compresión COLLAPSE, 40 GB, tope de 90 minutos por búsqueda) está en `summary.md`. Son resultados del modelo acotado, no una demostración de corrección del código C++.
+**Resultado en una línea.** Con los parámetros del repositorio (`-DMEMLIM=4096`), las once búsquedas (seguridad y las diez propiedades LTL) informan `errors: 0` en la parte explorada, pero todas se detuvieron en el límite de 4 GB antes de agotar el espacio de estados; el script del repositorio las declara PASSED igual: busca `errors: 0` en las búsquedas LTL e imprime PASSED en la de seguridad en cuanto `pan` termina. Su búsqueda de seguridad corre con el primer *claim* LTL del modelo activo (sin `-N` ni `-DNOCLAIM`). El segundo intento (compresión COLLAPSE, 40 GB, tope de 90 minutos por búsqueda) está en `summary.md`. Son resultados del modelo acotado, no una demostración de corrección del código C++.
 
 Los archivos y la forma de reproducirlo están descritos arriba, en inglés.

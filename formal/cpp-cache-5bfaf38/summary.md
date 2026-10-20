@@ -12,7 +12,7 @@
 
 | Verificación / check | Estados almacenados / stored states | Transiciones / transitions | Profundidad / depth | Memoria / memory | Tiempo / time | Errores / errors |
 |---|---|---|---|---|---|---|
-| Safety (33 assertions) | 33,102,381 | 140,042,560 | 500 | 4,096 MB | 106 s | 0 in the explored part; truncated by the memory limit |
+| Safety (33 assertions, first claim active) | 33,102,381 | 140,042,560 | 500 | 4,096 MB | 106 s | 0 in the explored part; truncated by the memory limit |
 | `every_requested_key_eventually_materializes` | 11,492,902 | 867,351,390 | 642 | 4,096 MB | 437 s | 0 in the explored part; truncated by the memory limit |
 | `no_starvation_thread0` | 11,526,987 | 771,590,620 | 632 | 4,096 MB | 414 s | 0 in the explored part; truncated by the memory limit |
 | `no_starvation_thread1` | 11,522,188 | 763,167,620 | 673 | 4,096 MB | 446 s | 0 in the explored part; truncated by the memory limit |
@@ -24,9 +24,9 @@
 | `no_orphaned_computing` | 27,012,836 | 250,906,790 | 540 | 4,096 MB | 126 s | 0 in the explored part; truncated by the memory limit |
 | `saturation_transient` | 27,018,914 | 483,344,210 | 645 | 4,096 MB | 336 s | 0 in the explored part; truncated by the memory limit |
 
-Las once búsquedas terminaron sin errores **en lo explorado**, pero 11 de las once alcanzaron el límite de 4 GB que fija el script del repositorio (`-DMEMLIM=4096`) y se detuvieron antes de agotar el espacio de estados: `pan` lo anuncia con «reached -DMEMLIM bound» y aun así imprime «errors: 0», que es lo único que `run_spin.sh` comprueba para declarar PASSED. El vector de estado es de 168 bytes; «estados almacenados» cuenta estados distintos hasta la parada y «transiciones» los pasos explorados. En total, 62 minutos de verificador.
+Las once búsquedas terminaron sin errores **en lo explorado**, pero 11 de las once alcanzaron el límite de 4 GB que fija el script del repositorio (`-DMEMLIM=4096`) y se detuvieron antes de agotar el espacio de estados: `pan` lo anuncia con «reached -DMEMLIM bound» y aun así imprime «errors: 0», que es lo que `run_spin.sh` comprueba para declarar PASSED en las ocho búsquedas LTL; en la de seguridad imprime PASSED en cuanto `pan` termina, sin mirar la salida. El vector de estado es de 168 bytes; «estados almacenados» cuenta estados distintos hasta la parada y «transiciones» los pasos explorados. En total, 62 minutos de verificador.
 
-All eleven searches finished with no errors **in the explored part**, but 11 of the eleven hit the 4 GB limit set by the repository script (`-DMEMLIM=4096`) and stopped before exhausting the state space: `pan` announces it with "reached -DMEMLIM bound" and still prints "errors: 0", which is the only thing `run_spin.sh` checks to declare PASSED. The state vector is 168 bytes; "stored states" counts distinct states until the stop and "transitions" the explored steps. In total, 62 minutes of verifier time.
+All eleven searches finished with no errors **in the explored part**, but 11 of the eleven hit the 4 GB limit set by the repository script (`-DMEMLIM=4096`) and stopped before exhausting the state space: `pan` announces it with "reached -DMEMLIM bound" and still prints "errors: 0", which is what `run_spin.sh` checks to declare PASSED for the eight LTL searches; for the safety search it prints PASSED as soon as `pan` exits, without reading the output. The state vector is 168 bytes; "stored states" counts distinct states until the stop and "transitions" the explored steps. In total, 62 minutes of verifier time.
 
 ## Intento exhaustivo con COLLAPSE y 40 GB / Exhaustive attempt with COLLAPSE and 40 GB
 
