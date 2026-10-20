@@ -12,7 +12,7 @@
 
 | Verificación / check | Estados almacenados / stored states | Transiciones / transitions | Profundidad / depth | Memoria / memory | Tiempo / time | Errores / errors |
 |---|---|---|---|---|---|---|
-| Safety (33 assertions, first claim active) | 33,102,381 | 140,042,560 | 500 | 4,096 MB | 106 s | 0 in the explored part; truncated by the memory limit |
+| Safety (30 assertions, first claim active) | 33,102,381 | 140,042,560 | 500 | 4,096 MB | 106 s | 0 in the explored part; truncated by the memory limit |
 | `every_requested_key_eventually_materializes` | 11,492,902 | 867,351,390 | 642 | 4,096 MB | 437 s | 0 in the explored part; truncated by the memory limit |
 | `no_starvation_thread0` | 11,526,987 | 771,590,620 | 632 | 4,096 MB | 414 s | 0 in the explored part; truncated by the memory limit |
 | `no_starvation_thread1` | 11,522,188 | 763,167,620 | 673 | 4,096 MB | 446 s | 0 in the explored part; truncated by the memory limit |
@@ -34,8 +34,14 @@ All eleven searches finished with no errors **in the explored part**, but 11 of 
 
 | Verificación / check | Estados almacenados / stored states | Transiciones / transitions | Profundidad / depth | Memoria / memory | Tiempo / time | Errores / errors |
 |---|---|---|---|---|---|---|
-| Safety (33 assertions), no claim, COLLAPSE, 40 GB | 537,000,000 | 2,530,000,000 | 467 | 31,841 MB | 2270 s | 0 in the explored part; process stopped by the operating system for lack of memory, no final `pan` report |
+| Safety (30 assertions), no claim, COLLAPSE, 40 GB | 537,000,000 | 2,530,000,000 | 467 | 31,841 MB | 2270 s | 0 in the explored part; process stopped by the operating system for lack of memory, no final `pan` report |
 
-Seguridad (33 aserciones), sin *claim*, COLLAPSE, 40 GB: el sistema operativo detuvo el proceso por falta de memoria a los 38 minutos, con 537.000.000 estados almacenados, 2.530.000.000 transiciones y 31.1 GB ocupados según la última línea de progreso de `pan`; sin errores hasta ahí y sin informe final.
+Seguridad (30 aserciones), sin *claim*, COLLAPSE, 40 GB: el sistema operativo detuvo el proceso por falta de memoria a los 38 minutos, con 537.000.000 estados almacenados, 2.530.000.000 transiciones y 31.1 GB ocupados según la última línea de progreso de `pan`; sin errores hasta ahí y sin informe final.
 
-Safety (33 assertions), no claim, COLLAPSE, 40 GB: the operating system stopped the process for lack of memory after 38 minutes, with 537,000,000 stored states, 2,530,000,000 transitions and 31.1 GB in use according to `pan`'s last progress line; no errors up to that point and no final report.
+Safety (30 assertions), no claim, COLLAPSE, 40 GB: the operating system stopped the process for lack of memory after 38 minutes, with 537,000,000 stored states, 2,530,000,000 transitions and 31.1 GB in use according to `pan`'s last progress line; no errors up to that point and no final report.
+
+## Corrección / Correction
+
+20 de octubre de 2026: el modelo tiene 30 sentencias `assert`. La primera versión de este resumen decía 33, porque contaba las líneas que contienen la palabra, entre ellas un comentario, la definición de `assert_consistent()` y su llamada. Las cifras de la corrida no cambian.
+
+October 20, 2026: the model has 30 `assert` statements. The first version of this summary said 33 because it counted the lines that contain the word, including a comment, the definition of `assert_consistent()` and its call. The run figures do not change.
