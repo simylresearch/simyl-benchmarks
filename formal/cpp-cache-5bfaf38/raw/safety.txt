@@ -1,0 +1,73 @@
+pan: ltl formula every_requested_key_eventually_materializes
+Depth=     469 States=    1e+06 Transitions= 4.03e+06 Memory=   247.989	t=     1.92 R=   5e+05
+Depth=     469 States=    2e+06 Transitions= 8.15e+06 Memory=   362.345	t=     3.93 R=   5e+05
+Depth=     469 States=    3e+06 Transitions= 1.23e+07 Memory=   476.798	t=     5.95 R=   5e+05
+Depth=     469 States=    4e+06 Transitions= 1.67e+07 Memory=   591.153	t=     8.44 R=   5e+05
+Depth=     469 States=    5e+06 Transitions= 2.15e+07 Memory=   705.606	t=     11.2 R=   4e+05
+Depth=     469 States=    6e+06 Transitions= 2.62e+07 Memory=   820.059	t=     14.8 R=   4e+05
+Depth=     479 States=    7e+06 Transitions= 3.11e+07 Memory=   934.610	t=     17.7 R=   4e+05
+Depth=     479 States=    8e+06 Transitions= 3.59e+07 Memory=  1049.063	t=     20.3 R=   4e+05
+Depth=     479 States=    9e+06 Transitions= 3.99e+07 Memory=  1163.517	t=     22.7 R=   4e+05
+Depth=     479 States=    1e+07 Transitions= 4.36e+07 Memory=  1285.099	t=     24.8 R=   4e+05
+Depth=     479 States=  1.1e+07 Transitions= 4.73e+07 Memory=  1407.169	t=     27.1 R=   4e+05
+Depth=     479 States=  1.2e+07 Transitions= 5.12e+07 Memory=  1529.239	t=     29.6 R=   4e+05
+Depth=     479 States=  1.3e+07 Transitions= 5.46e+07 Memory=  1651.309	t=       32 R=   4e+05
+Depth=     479 States=  1.4e+07 Transitions= 5.81e+07 Memory=  1773.380	t=     34.2 R=   4e+05
+Depth=     479 States=  1.5e+07 Transitions=  6.2e+07 Memory=  1895.450	t=     36.8 R=   4e+05
+Depth=     479 States=  1.6e+07 Transitions= 6.59e+07 Memory=  2017.520	t=     39.2 R=   4e+05
+Depth=     479 States=  1.7e+07 Transitions= 6.98e+07 Memory=  2139.591	t=     41.7 R=   4e+05
+Depth=     479 States=  1.8e+07 Transitions= 7.37e+07 Memory=  2261.661	t=     44.1 R=   4e+05
+Depth=     479 States=  1.9e+07 Transitions= 7.76e+07 Memory=  2383.731	t=     46.6 R=   4e+05
+Depth=     479 States=    2e+07 Transitions= 8.15e+07 Memory=  2505.802	t=     49.1 R=   4e+05
+Depth=     479 States=  2.1e+07 Transitions= 8.53e+07 Memory=  2627.872	t=       52 R=   4e+05
+Depth=     479 States=  2.2e+07 Transitions= 8.87e+07 Memory=  2749.942	t=     55.1 R=   4e+05
+Depth=     479 States=  2.3e+07 Transitions= 9.23e+07 Memory=  2870.938	t=     57.9 R=   4e+05
+Depth=     479 States=  2.4e+07 Transitions= 9.61e+07 Memory=  2992.227	t=     60.9 R=   4e+05
+Depth=     479 States=  2.5e+07 Transitions=    1e+08 Memory=  3113.712	t=     64.1 R=   4e+05
+Depth=     479 States=  2.6e+07 Transitions= 1.05e+08 Memory=  3234.415	t=     67.3 R=   4e+05
+Depth=     479 States=  2.7e+07 Transitions=  1.1e+08 Memory=  3355.411	t=     71.4 R=   4e+05
+Depth=     479 States=  2.8e+07 Transitions= 1.15e+08 Memory=  3477.286	t=     76.7 R=   4e+05
+Depth=     497 States=  2.9e+07 Transitions=  1.2e+08 Memory=  3598.087	t=     82.1 R=   4e+05
+Depth=     500 States=    3e+07 Transitions= 1.25e+08 Memory=  3719.669	t=     88.5 R=   3e+05
+Depth=     500 States=  3.1e+07 Transitions=  1.3e+08 Memory=  3840.763	t=     93.9 R=   3e+05
+Depth=     500 States=  3.2e+07 Transitions= 1.35e+08 Memory=  3962.149	t=      101 R=   3e+05
+Depth=     500 States=  3.3e+07 Transitions=  1.4e+08 Memory=  4083.634	t=      106 R=   3e+05
+pan: reached -DMEMLIM bound
+	4.2949e+09 bytes used
+	102400 bytes more needed
+	4.29497e+09 bytes limit
+hint: to reduce memory, recompile with
+  -DCOLLAPSE # good, fast compression, or
+  -DMA=168   # better/slower compression, or
+  -DHC # hash-compaction, approximation
+  -DBITSTATE # supertrace, approximation
+
+(Spin Version 6.5.2 -- 6 December 2019)
+Warning: Search not completed
+	+ Partial Order Reduction
+
+Full statespace search for:
+	never claim         	+ (every_requested_key_eventually_materializes)
+	assertion violations	+ (if within scope of claim)
+	acceptance   cycles 	- (not selected)
+	invalid end states	- (disabled by -E flag)
+
+State-vector 168 byte, depth reached 500, errors: 0
+ 33102381 states, stored
+1.0694017e+08 states, matched
+1.4004256e+08 transitions (= stored+matched)
+7.5568544e+08 atomic steps
+hash conflicts:  45703800 (resolved)
+
+Stats on memory usage (in Megabytes):
+ 6187.503	equivalent memory usage for states (stored*(State-vector + overhead))
+ 3963.384	actual memory usage for states (compression: 64.05%)
+         	state-vector as stored = 98 byte + 28 byte overhead
+  128.000	memory used for hash table (-w24)
+    5.341	memory used for DFS stack (-m100000)
+ 4095.938	total actual memory usage
+
+
+
+pan: elapsed time 106 seconds
+pan: rate 311639.81 states/second

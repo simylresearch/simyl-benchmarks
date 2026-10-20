@@ -1,0 +1,14 @@
+ltl every_requested_key_eventually_materializes: <> (((ever_stored[0]) && (ever_stored[1])) && (ever_stored[2]))
+ltl no_starvation_thread0: [] ((! (! (request_done[0]))) || (<> (request_done[0])))
+ltl no_starvation_thread1: [] ((! (! (request_done[1]))) || (<> (request_done[1])))
+ltl no_starvation_thread2: [] ((! (! (request_done[2]))) || (<> (request_done[2])))
+ltl no_starvation_thread3: [] ((! (! (request_done[3]))) || (<> (request_done[3])))
+ltl no_starvation_thread4: [] ((! (! (request_done[4]))) || (<> (request_done[4])))
+ltl no_starvation_thread5: [] ((! (! (request_done[5]))) || (<> (request_done[5])))
+ltl all_terminate: <> ((((((request_done[0]) && (request_done[1])) && (request_done[2])) && (request_done[3])) && (request_done[4])) && (request_done[5]))
+ltl no_orphaned_computing: [] ((! ((computing_count>0))) || (<> ((computing_count==0))))
+ltl saturation_transient: [] ((! (((((slot_state[0]!=Empty)) && ((slot_state[1]!=Empty))) && (((slot_state[0]==Computing)) || ((slot_rc[0]>1)))) && (((slot_state[1]==Computing)) || ((slot_rc[1]>1))))) || (<> (! (((((slot_state[0]!=Empty)) && ((slot_state[1]!=Empty))) && (((slot_state[0]==Computing)) || ((slot_rc[0]>1)))) && (((slot_state[1]==Computing)) || ((slot_rc[1]>1)))))))
+  the model contains 10 never claims: saturation_transient, no_orphaned_computing, all_terminate, no_starvation_thread5, no_starvation_thread4, no_starvation_thread3, no_starvation_thread2, no_starvation_thread1, no_starvation_thread0, every_requested_key_eventually_materializes
+  only one claim is used in a verification run
+  choose which one with ./pan -a -N name (defaults to -N every_requested_key_eventually_materializes)
+  or use e.g.: spin -search -ltl every_requested_key_eventually_materializes cache_model.pml

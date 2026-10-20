@@ -1,0 +1,15 @@
+fecha_utc: 2026-10-19T22:01:23Z
+repositorio: https://github.com/lrleon/cpp-cache
+commit: 5bfaf38d328a799ba94f8ce64f61155df18d06ee
+modelo: formal/cache_model.pml sha256=f8c872d01284e91bc00f1d95b662152961862719d2f2a6de2b5446cb6f70e1c5 lineas=813
+spin: Spin Version 6.5.2 -- 6 December 2019
+cc: cc (Ubuntu 14.3.0-12ubuntu1~24~ppa1) 14.3.0
+so: Ubuntu 24.04.5 LTS kernel=6.8.0-146-generic arch=x86_64
+cpu: AMD Ryzen 7 PRO 7840U w/ Radeon 780M Graphics nucleos=16
+ram_total_gib: 58
+energia: balanced gobernador=powersave
+comandos: spin -a cache_model.pml; cc -O2 -DNFAIR=8 -DMEMLIM=4096 -o pan pan.c; ./pan -m100000 -n -E (seguridad); ./pan -m100000 -n -E -a -f -N <propiedad> (cada LTL)
+fin_utc: 2026-10-19T23:49:56Z
+extra_inicio_utc: 2026-10-19T23:52:44Z
+extra_comandos: cc -O2 -DNOCLAIM -DSAFETY -DCOLLAPSE -DMEMLIM=40960 -o pan_safety pan.c; ./pan_safety -m100000 -n -E (seguridad exhaustiva, sin claim); cc -O2 -DNFAIR=8 -DCOLLAPSE -DMEMLIM=40960 -o pan_collapse pan.c; ./pan_collapse -m100000 -n -E -a -f -N every_requested_key_eventually_materializes; tope de 90 min por búsqueda (SIGINT)
+extra_detenido_por_el_sistema_utc: 2026-10-20T00:32:04Z (proceso pan_safety terminado por falta de memoria del sistema; la búsqueda LTL con COLLAPSE no se ejecutó)

@@ -1,0 +1,106 @@
+=== Generating verifier from cache_model.pml ===
+ltl every_requested_key_eventually_materializes: <> (((ever_stored[0]) && (ever_stored[1])) && (ever_stored[2]))
+ltl no_starvation_thread0: [] ((! (! (request_done[0]))) || (<> (request_done[0])))
+ltl no_starvation_thread1: [] ((! (! (request_done[1]))) || (<> (request_done[1])))
+ltl no_starvation_thread2: [] ((! (! (request_done[2]))) || (<> (request_done[2])))
+ltl no_starvation_thread3: [] ((! (! (request_done[3]))) || (<> (request_done[3])))
+ltl no_starvation_thread4: [] ((! (! (request_done[4]))) || (<> (request_done[4])))
+ltl no_starvation_thread5: [] ((! (! (request_done[5]))) || (<> (request_done[5])))
+ltl all_terminate: <> ((((((request_done[0]) && (request_done[1])) && (request_done[2])) && (request_done[3])) && (request_done[4])) && (request_done[5]))
+ltl no_orphaned_computing: [] ((! ((computing_count>0))) || (<> ((computing_count==0))))
+ltl saturation_transient: [] ((! (((((slot_state[0]!=Empty)) && ((slot_state[1]!=Empty))) && (((slot_state[0]==Computing)) || ((slot_rc[0]>1)))) && (((slot_state[1]==Computing)) || ((slot_rc[1]>1))))) || (<> (! (((((slot_state[0]!=Empty)) && ((slot_state[1]!=Empty))) && (((slot_state[0]==Computing)) || ((slot_rc[0]>1)))) && (((slot_state[1]==Computing)) || ((slot_rc[1]>1)))))))
+  the model contains 10 never claims: saturation_transient, no_orphaned_computing, all_terminate, no_starvation_thread5, no_starvation_thread4, no_starvation_thread3, no_starvation_thread2, no_starvation_thread1, no_starvation_thread0, every_requested_key_eventually_materializes
+  only one claim is used in a verification run
+  choose which one with ./pan -a -N name (defaults to -N every_requested_key_eventually_materializes)
+  or use e.g.: spin -search -ltl every_requested_key_eventually_materializes cache_model.pml
+
+=== [1/2] Safety verification (assertions) ===
+warning: never claim + accept labels requires -a flag to fully verify
+pan: ltl formula every_requested_key_eventually_materializes
+Depth=     469 States=    1e+06 Transitions= 4.03e+06 Memory=   247.989	t=     2.53 R=   4e+05
+Depth=     469 States=    2e+06 Transitions= 8.15e+06 Memory=   362.345	t=     4.71 R=   4e+05
+Depth=     469 States=    3e+06 Transitions= 1.23e+07 Memory=   476.798	t=     7.29 R=   4e+05
+Depth=     469 States=    4e+06 Transitions= 1.67e+07 Memory=   591.153	t=     9.84 R=   4e+05
+Depth=     469 States=    5e+06 Transitions= 2.15e+07 Memory=   705.606	t=     12.7 R=   4e+05
+Depth=     469 States=    6e+06 Transitions= 2.62e+07 Memory=   820.059	t=     15.6 R=   4e+05
+Depth=     479 States=    7e+06 Transitions= 3.11e+07 Memory=   934.610	t=     18.5 R=   4e+05
+Depth=     479 States=    8e+06 Transitions= 3.59e+07 Memory=  1049.063	t=     21.5 R=   4e+05
+Depth=     479 States=    9e+06 Transitions= 3.99e+07 Memory=  1163.517	t=     24.2 R=   4e+05
+Depth=     479 States=    1e+07 Transitions= 4.36e+07 Memory=  1285.099	t=     26.5 R=   4e+05
+Depth=     479 States=  1.1e+07 Transitions= 4.73e+07 Memory=  1407.169	t=     29.1 R=   4e+05
+Depth=     479 States=  1.2e+07 Transitions= 5.12e+07 Memory=  1529.239	t=     31.8 R=   4e+05
+Depth=     479 States=  1.3e+07 Transitions= 5.46e+07 Memory=  1651.309	t=     34.1 R=   4e+05
+Depth=     479 States=  1.4e+07 Transitions= 5.81e+07 Memory=  1773.380	t=     36.9 R=   4e+05
+Depth=     479 States=  1.5e+07 Transitions=  6.2e+07 Memory=  1895.450	t=     39.8 R=   4e+05
+Depth=     479 States=  1.6e+07 Transitions= 6.59e+07 Memory=  2017.520	t=     42.7 R=   4e+05
+Depth=     479 States=  1.7e+07 Transitions= 6.98e+07 Memory=  2139.591	t=     45.5 R=   4e+05
+Depth=     479 States=  1.8e+07 Transitions= 7.37e+07 Memory=  2261.661	t=     48.3 R=   4e+05
+Depth=     479 States=  1.9e+07 Transitions= 7.76e+07 Memory=  2383.731	t=     51.3 R=   4e+05
+Depth=     479 States=    2e+07 Transitions= 8.15e+07 Memory=  2505.802	t=     54.3 R=   4e+05
+Depth=     479 States=  2.1e+07 Transitions= 8.53e+07 Memory=  2627.872	t=     57.1 R=   4e+05
+Depth=     479 States=  2.2e+07 Transitions= 8.87e+07 Memory=  2749.942	t=       60 R=   4e+05
+Depth=     479 States=  2.3e+07 Transitions= 9.23e+07 Memory=  2870.938	t=     63.1 R=   4e+05
+Depth=     479 States=  2.4e+07 Transitions= 9.61e+07 Memory=  2992.227	t=     66.2 R=   4e+05
+Depth=     479 States=  2.5e+07 Transitions=    1e+08 Memory=  3113.712	t=     69.5 R=   4e+05
+Depth=     479 States=  2.6e+07 Transitions= 1.05e+08 Memory=  3234.415	t=       73 R=   4e+05
+Depth=     479 States=  2.7e+07 Transitions=  1.1e+08 Memory=  3355.411	t=     77.6 R=   3e+05
+Depth=     479 States=  2.8e+07 Transitions= 1.15e+08 Memory=  3477.286	t=     81.8 R=   3e+05
+Depth=     497 States=  2.9e+07 Transitions=  1.2e+08 Memory=  3598.087	t=     85.7 R=   3e+05
+Depth=     500 States=    3e+07 Transitions= 1.25e+08 Memory=  3719.669	t=       90 R=   3e+05
+Depth=     500 States=  3.1e+07 Transitions=  1.3e+08 Memory=  3840.763	t=     93.8 R=   3e+05
+Depth=     500 States=  3.2e+07 Transitions= 1.35e+08 Memory=  3962.149	t=     98.5 R=   3e+05
+Depth=     500 States=  3.3e+07 Transitions=  1.4e+08 Memory=  4083.634	t=      103 R=   3e+05
+pan: reached -DMEMLIM bound
+	4.2949e+09 bytes used
+	102400 bytes more needed
+	4.29497e+09 bytes limit
+hint: to reduce memory, recompile with
+  -DCOLLAPSE # good, fast compression, or
+  -DMA=168   # better/slower compression, or
+  -DHC # hash-compaction, approximation
+  -DBITSTATE # supertrace, approximation
+
+(Spin Version 6.5.2 -- 6 December 2019)
+Warning: Search not completed
+	+ Partial Order Reduction
+
+Full statespace search for:
+	never claim         	+ (every_requested_key_eventually_materializes)
+	assertion violations	+ (if within scope of claim)
+	acceptance   cycles 	- (not selected)
+	invalid end states	- (disabled by -E flag)
+
+State-vector 168 byte, depth reached 500, errors: 0
+ 33102381 states, stored
+1.0694017e+08 states, matched
+1.4004256e+08 transitions (= stored+matched)
+7.5568544e+08 atomic steps
+hash conflicts:  45703800 (resolved)
+
+Stats on memory usage (in Megabytes):
+ 6187.503	equivalent memory usage for states (stored*(State-vector + overhead))
+ 3963.384	actual memory usage for states (compression: 64.05%)
+         	state-vector as stored = 98 byte + 28 byte overhead
+  128.000	memory used for hash table (-w24)
+    5.341	memory used for DFS stack (-m100000)
+ 4095.938	total actual memory usage
+
+
+
+pan: elapsed time 103 seconds
+pan: rate  322101.6 states/second
+  Safety: PASSED
+
+=== [2/2] Liveness verification (LTL under weak fairness) ===
+  - every_requested_key_eventually_materializes ... PASSED
+  - no_starvation_thread0 ... PASSED
+  - no_starvation_thread1 ... PASSED
+  - no_starvation_thread2 ... PASSED
+  - no_starvation_thread3 ... PASSED
+  - no_starvation_thread4 ... PASSED
+  - no_starvation_thread5 ... PASSED
+  - all_terminate ... PASSED
+
+=== Cleanup ===
+Done.
+run_spin.sh exit=0
